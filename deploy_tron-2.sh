@@ -7,8 +7,8 @@ WORK_SPACE=$PWD
 NET="mainnet"
 BRANCH="master"
 DB="keep"
-RPC_PORT=50051
-TRUST_NODE="127.0.0.1:50051"
+RPC_PORT=50052
+TRUST_NODE="127.0.0.1:50052"
 
 # compute default heap size
 # total=`cat /proc/meminfo  |grep MemTotal |awk -F ' ' '{print $2}'`
@@ -93,12 +93,12 @@ elif [ $NET == "testnet" ]; then
   wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/test_net_config.conf -O test_net_config.conf
   CONF_PATH=$BIN_PATH/test_net_config.conf
 elif [ $NET == "privatenet" ]; then
-  wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/private_net_config.conf -O private_net_config.conf
-  CONF_PATH=$BIN_PATH/private_net_config.conf
+  wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/private_net_config-2.conf -O private_net_config-2.conf
+  CONF_PATH=$BIN_PATH/private_net_config-2.conf
 fi
 
 if [ -n $RPC_PORT ]; then
-  sed "s/port = 50051/port = $RPC_PORT/g" $CONF_PATH > tmp
+  sed "s/port = 50052/port = $RPC_PORT/g" $CONF_PATH > tmp
   cat tmp > $CONF_PATH
 fi
 # # checkout branch or commitid
