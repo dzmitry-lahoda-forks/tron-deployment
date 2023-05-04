@@ -80,12 +80,13 @@ echo 'download code from git repository'
 if [ ! -e $BIN_PATH ]; then
   mkdir -p $BIN_PATH
   cd $BIN_PATH
-  git clone https://github.com/tronprotocol/$PROJECT
+  git clone https://github.com/dzmitry-lahoda-forks/$PROJECT
 fi
 
 cd $BIN_PATH
 if [ $NET == "mainnet" ]; then
-  wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/main_net_config.conf -O main_net_config.conf
+  #wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/main_net_config.conf -O main_net_config.conf
+  cp ../main_net_config.conf .
   #RELEASE=`curl --silent "https://api.github.com/repos/tronprotocol/java-tron/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'`
   CONF_PATH=$BIN_PATH/main_net_config.conf
 elif [ $NET == "testnet" ]; then
