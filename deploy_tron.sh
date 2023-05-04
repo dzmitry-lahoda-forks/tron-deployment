@@ -85,11 +85,11 @@ fi
 
 cd $BIN_PATH
 if [ $NET == "mainnet" ]; then
-  wget https://raw.githubusercontent.com/tronprotocol/TronDeployment/master/main_net_config.conf -O main_net_config.conf
-  RELEASE=`curl --silent "https://api.github.com/repos/tronprotocol/java-tron/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'`
+  wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/main_net_config.conf -O main_net_config.conf
+  #RELEASE=`curl --silent "https://api.github.com/repos/tronprotocol/java-tron/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'`
   CONF_PATH=$BIN_PATH/main_net_config.conf
 elif [ $NET == "testnet" ]; then
-  wget https://raw.githubusercontent.com/tronprotocol/TronDeployment/master/test_net_config.conf -O test_net_config.conf
+  wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/test_net_config.conf -O test_net_config.conf
   CONF_PATH=$BIN_PATH/test_net_config.conf
 fi
 
@@ -97,19 +97,19 @@ if [ -n $RPC_PORT ]; then
   sed "s/port = 50051/port = $RPC_PORT/g" $CONF_PATH > tmp
   cat tmp > $CONF_PATH
 fi
-# checkout branch or commitid
-if [ -n  "$BRANCH" ]; then
-  cd $BIN_PATH/$PROJECT && git fetch && git checkout $BRANCH;  git reset --hard origin/$BRANCH
-fi
+# # checkout branch or commitid
+# if [ -n  "$BRANCH" ]; then
+#   cd $BIN_PATH/$PROJECT && git fetch && git checkout $BRANCH;  git reset --hard origin/$BRANCH
+# fi
 
-if [ -n "$COMMITID" ]; then
-  cd $BIN_PATH/$PROJECT && git fetch && git checkout $COMMITID
-fi
+# if [ -n "$COMMITID" ]; then
+#   cd $BIN_PATH/$PROJECT && git fetch && git checkout $COMMITID
+# fi
 
-if [ -n "$RELEASE" ]; then
-  cd $BIN_PATH/$PROJECT && git fetch && git checkout tags/$RELEASE -b release
-  BRANCH='release'
-fi
+# if [ -n "$RELEASE" ]; then
+#   cd $BIN_PATH/$PROJECT && git fetch && git checkout tags/$RELEASE -b release
+#   BRANCH='release'
+# fi
 
 if [ $DB == "remove" ]; then
   rm -rf $BIN_PATH/output-directory
@@ -120,8 +120,11 @@ elif [ $DB == "backup" ]; then
   echo "backup db success"
 fi
 
-cd $BIN_PATH/$PROJECT && ./gradlew build -x test
-cp $BIN_PATH/$PROJECT/build/libs/$JAR_NAME.jar $BIN_PATH
+#cd $BIN_PATH/$PROJECT && ./gradlew build -x test
+#cp $BIN_PATH/$PROJECT/build/libs/$JAR_NAME.jar $BIN_PATH
+echo "copy full node to run dir"
+cp /home/dz/github.com/tronprotocol/java-tron/build/libs/FullNode.jar $BIN_PATH
+echo "copied"
 
 
 if [ $APP == "SolidityNode" ]; then
@@ -153,6 +156,7 @@ done
 echo "starting $APP"
 cd $BIN_PATH
 
+echo "process    : nohup java $JVM_OPT -jar $JAR_NAME.jar $START_OPT -c $CONF_PATH  >> start.log 2>&1 &"
 nohup java $JVM_OPT -jar $JAR_NAME.jar -c $CONF_PATH $START_OPT >> start.log 2>&1 &
 
 pid=`ps ax |grep $JAR_NAME.jar |grep -v grep | awk '{print $1}'`
@@ -163,7 +167,6 @@ if [ -z $pid ]; then
         exit 2
 fi
 
-echo "process    : nohup java $JVM_OPT -jar $JAR_NAME.jar $START_OPT -c $CONF_PATH  >> start.log 2>&1 &"
 echo "pid        : $pid"
 echo "application: $APP"
 echo "tron net   : $NET"
