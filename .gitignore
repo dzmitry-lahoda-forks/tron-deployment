@@ -1,3 +1,6 @@
 FulNode/**
 *.jar
 FullNode
+data
+**/logs/**
+*.log
