@@ -6,7 +6,7 @@ PROJECT="java-tron"
 WORK_SPACE=$PWD
 NET="mainnet"
 BRANCH="master"
-DB="keep"
+DB="remove"
 RPC_PORT=50051
 TRUST_NODE="127.0.0.1:50051"
 
@@ -93,8 +93,9 @@ elif [ $NET == "testnet" ]; then
   wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/test_net_config.conf -O test_net_config.conf
   CONF_PATH=$BIN_PATH/test_net_config.conf
 elif [ $NET == "privatenet" ]; then
-  wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/private_net_config.conf -O private_net_config.conf
-  CONF_PATH=$BIN_PATH/private_net_config.conf
+  cp ../alice.conf .
+  #wget https://raw.githubusercontent.com/dzmitry-lahoda-forks/tron-deployment/master/private_net_config.conf -O private_net_config.conf
+  CONF_PATH=$BIN_PATH/alice.conf
 fi
 
 if [ -n $RPC_PORT ]; then
@@ -160,8 +161,8 @@ JVM_OPT="-Xmx$HEAP_SIZE -XX:+HeapDumpOnOutOfMemoryError"
 echo "starting $APP"
 cd $BIN_PATH
 
-echo "process    : nohup java $JVM_OPT -jar $JAR_NAME.jar $START_OPT -c $CONF_PATH  >> start.log 2>&1 &"
-nohup java $JVM_OPT -jar $JAR_NAME.jar -c $CONF_PATH $START_OPT >> start.log 2>&1 &
+echo "process    : nohup java $JVM_OPT -jar $JAR_NAME.jar $START_OPT -p 427139B43028A492E2705BCC9C64172392B8DB59F3BA1AEDAE41C88924960091 -c $CONF_PATH  >> start.log 2>&1 &"
+nohup java $JVM_OPT -jar $JAR_NAME.jar -p 427139B43028A492E2705BCC9C64172392B8DB59F3BA1AEDAE41C88924960091 -c $CONF_PATH $START_OPT >> start.log 2>&1 &
 
 pid=`ps ax |grep $JAR_NAME.jar |grep -v grep | awk '{print $1}'`
 echo $pid
